@@ -1,0 +1,14 @@
+# dangling_else.lg: the classic ambiguity. "if a then if b then x else y":
+# does the else belong to the inner or the outer if?
+# No precedence is declared, so LALRGen reports exactly one shift/reduce conflict and
+# resolves it by shifting, which attaches the else to the nearest if (what C and Java do).
+# See dangling_else_prec.lg for the version that silences the conflict with %prec.
+%token ID  /[a-z]+/
+%skip      /[ \t\r\n]+/
+
+%%
+
+stmt : 'if' ID 'then' stmt
+     | 'if' ID 'then' stmt 'else' stmt
+     | ID
+     ;

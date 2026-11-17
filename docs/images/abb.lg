@@ -1,0 +1,4 @@
+# Tiny spec used only to draw the lexer pictures in the README: one token, (a|b)*abb.
+%token ABB /(a|b)*abb/
+%%
+s : ABB ;

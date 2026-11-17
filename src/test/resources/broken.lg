@@ -1,0 +1,6 @@
+%token A /a/
+%%
+
+s : A t
+  | nope ;
+t : A ;

@@ -1,0 +1,96 @@
+# minic.lg: a subset of C.
+#   global int variables, int/void functions with int parameters,
+#   blocks, local declarations, if/else, while, return, expression statements,
+#   calls, and expressions with C precedence for || && == != < <= > >= + - * / % ! and unary minus.
+%token INT_LIT /[0-9]+/
+%token ID      /[a-zA-Z_][a-zA-Z0-9_]*/
+%skip          /[ \t\r\n]+/
+%skip          /\/\/[^\n]*/
+%skip          /\/\*([^*]|\*+[^*\/])*\*+\//
+
+# lowest precedence first
+%nonassoc THEN
+%nonassoc 'else'
+%right    '='
+%left     '||'
+%left     '&&'
+%left     '==' '!='
+%left     '<' '<=' '>' '>='
+%left     '+' '-'
+%left     '*' '/' '%'
+%right    '!' UMINUS
+
+%start program
+
+%%
+
+program   : decls                                  -> Program($1)
+          ;
+
+decls     : %empty                                 -> List
+          | decls decl                             -> List($1, $2)
+          ;
+
+decl      : 'int' ID ';'                           -> VarDecl($2)
+          | 'int' ID '=' expr ';'                  -> VarDecl($2, $4)
+          | 'int' ID '(' params ')' block          -> Func(Type($1), $2, $4, $6)
+          | 'void' ID '(' params ')' block         -> Func(Type($1), $2, $4, $6)
+          ;
+
+params    : %empty                                 -> List
+          | 'void'                                 -> List
+          | paramlist                              -> $1
+          ;
+
+paramlist : 'int' ID                               -> List($2)
+          | paramlist ',' 'int' ID                 -> List($1, $4)
+          ;
+
+block     : '{' stmts '}'                          -> Block($2)
+          ;
+
+stmts     : %empty                                 -> List
+          | stmts stmt                             -> List($1, $2)
+          ;
+
+stmt      : block                                  -> $1
+          | 'int' ID ';'                           -> VarDecl($2)
+          | 'int' ID '=' expr ';'                  -> VarDecl($2, $4)
+          | expr ';'                               -> ExprStmt($1)
+          | ';'                                    -> Empty
+          | 'if' '(' expr ')' stmt %prec THEN      -> If($3, $5)
+          | 'if' '(' expr ')' stmt 'else' stmt     -> If($3, $5, $7)
+          | 'while' '(' expr ')' stmt              -> While($3, $5)
+          | 'return' expr ';'                      -> Return($2)
+          | 'return' ';'                           -> Return
+          ;
+
+expr      : ID '=' expr                            -> Assign($1, $3)
+          | expr '||' expr                         -> Or($1, $3)
+          | expr '&&' expr                         -> And($1, $3)
+          | expr '==' expr                         -> Eq($1, $3)
+          | expr '!=' expr                         -> Ne($1, $3)
+          | expr '<' expr                          -> Lt($1, $3)
+          | expr '<=' expr                         -> Le($1, $3)
+          | expr '>' expr                          -> Gt($1, $3)
+          | expr '>=' expr                         -> Ge($1, $3)
+          | expr '+' expr                          -> Add($1, $3)
+          | expr '-' expr                          -> Sub($1, $3)
+          | expr '*' expr                          -> Mul($1, $3)
+          | expr '/' expr                          -> Div($1, $3)
+          | expr '%' expr                          -> Mod($1, $3)
+          | '!' expr                               -> Not($2)
+          | '-' expr %prec UMINUS                  -> Neg($2)
+          | '(' expr ')'                           -> $2
+          | ID '(' args ')'                        -> Call($1, $3)
+          | ID                                     -> Var($1)
+          | INT_LIT                                -> Int($1)
+          ;
+
+args      : %empty                                 -> List
+          | arglist                                -> $1
+          ;
+
+arglist   : expr                                   -> List($1)
+          | arglist ',' expr                       -> List($1, $3)
+          ;

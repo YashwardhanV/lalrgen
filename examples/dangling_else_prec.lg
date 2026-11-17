@@ -1,0 +1,15 @@
+# dangling_else_prec.lg: same grammar as dangling_else.lg, conflict resolved explicitly.
+# The short "if" rule gets the precedence of THEN, which is lower than ELSE,
+# so on lookahead 'else' the parser shifts (else binds to the nearest if).
+%token ID  /[a-z]+/
+%skip      /[ \t\r\n]+/
+
+%nonassoc THEN
+%nonassoc 'else'
+
+%%
+
+stmt : 'if' ID 'then' stmt %prec THEN         -> If($2, $4)
+     | 'if' ID 'then' stmt 'else' stmt        -> IfElse($2, $4, $6)
+     | ID                                     -> Stmt($1)
+     ;

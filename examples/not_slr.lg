@@ -1,0 +1,17 @@
+# not_slr.lg: LALR(1) but not SLR(1) (dragon book, example 4.48).
+# SLR reduces R -> L on every token in FOLLOW(R), which contains '=', so in the state
+# after reading L it cannot decide between shifting '=' and reducing. LR(1)/LALR know
+# that at that point R can only be followed by $.
+%token id /[a-z]+/
+%skip     /[ \t\r\n]+/
+
+%%
+
+S : L '=' R
+  | R
+  ;
+L : '*' R
+  | id
+  ;
+R : L
+  ;

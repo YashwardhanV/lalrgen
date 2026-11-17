@@ -1,0 +1,15 @@
+# not_lalr.lg: LR(1) but not LALR(1) (dragon book, example 4.58).
+# Canonical LR(1) has two states with the same core { A -> c . , B -> c . } but
+# different lookaheads ({d}/{e} and {e}/{d}). LALR merges them, and the union of
+# lookaheads makes both reductions possible on d and on e: a reduce/reduce conflict.
+%skip /[ \t\r\n]+/
+
+%%
+
+S : 'a' A 'd'
+  | 'b' B 'd'
+  | 'a' B 'e'
+  | 'b' A 'e'
+  ;
+A : 'c' ;
+B : 'c' ;

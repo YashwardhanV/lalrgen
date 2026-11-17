@@ -1,0 +1,27 @@
+digraph LR1 {
+  rankdir=LR;
+  node [shape=box, fontname="monospace", fontsize=10];
+  0 [label="I0\lS' -> . S , $\lS -> . C C , $\lC -> . 'c' C , 'c'/'d'\lC -> . 'd' , 'c'/'d'\l"];
+  1 [label="I1\lC -> 'c' . C , 'c'/'d'\lC -> . 'c' C , 'c'/'d'\lC -> . 'd' , 'c'/'d'\l"];
+  2 [label="I2\lC -> 'd' . , 'c'/'d'\l"];
+  3 [label="I3\lS' -> S . , $\l"];
+  4 [label="I4\lS -> C . C , $\lC -> . 'c' C , $\lC -> . 'd' , $\l"];
+  5 [label="I5\lC -> 'c' C . , 'c'/'d'\l"];
+  6 [label="I6\lC -> 'c' . C , $\lC -> . 'c' C , $\lC -> . 'd' , $\l"];
+  7 [label="I7\lC -> 'd' . , $\l"];
+  8 [label="I8\lS -> C C . , $\l"];
+  9 [label="I9\lC -> 'c' C . , $\l"];
+  0 -> 1 [label="'c'"];
+  0 -> 2 [label="'d'"];
+  0 -> 3 [label="S"];
+  0 -> 4 [label="C"];
+  1 -> 1 [label="'c'"];
+  1 -> 2 [label="'d'"];
+  1 -> 5 [label="C"];
+  4 -> 6 [label="'c'"];
+  4 -> 7 [label="'d'"];
+  4 -> 8 [label="C"];
+  6 -> 6 [label="'c'"];
+  6 -> 7 [label="'d'"];
+  6 -> 9 [label="C"];
+}

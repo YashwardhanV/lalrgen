@@ -1,0 +1,35 @@
+# json.lg: full JSON (RFC 8259) with an AST.
+# STRING: any char except quote, backslash and control chars, or an escape sequence.
+%token STRING /"([^"\\\x00-\x1F]|\\["\\\/bfnrt]|\\u[0-9a-fA-F]{4})*"/
+%token NUMBER /-?(0|[1-9][0-9]*)(\.[0-9]+)?([eE][+\-]?[0-9]+)?/
+%skip         /[ \t\r\n]+/
+
+%%
+
+value    : object                -> $1
+         | array                 -> $1
+         | STRING                -> Str($1)
+         | NUMBER                -> Num($1)
+         | 'true'                -> True
+         | 'false'               -> False
+         | 'null'                -> Null
+         ;
+
+object   : '{' '}'               -> Object
+         | '{' members '}'       -> Object($2)
+         ;
+
+members  : pair                  -> List($1)
+         | members ',' pair      -> List($1, $3)
+         ;
+
+pair     : STRING ':' value      -> Pair(Str($1), $3)
+         ;
+
+array    : '[' ']'               -> Array
+         | '[' elements ']'      -> Array($2)
+         ;
+
+elements : value                 -> List($1)
+         | elements ',' value    -> List($1, $3)
+         ;

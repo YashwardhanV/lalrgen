@@ -1,0 +1,15 @@
+# nonassoc.lg: comparison operators cannot be chained. "a < b" is fine, "a < b < c" is an error.
+%token ID /[a-z]+/
+%skip     /[ \t\r\n]+/
+
+%nonassoc '<' '>' '=='
+%left '+'
+
+%%
+
+e : e '<' e
+  | e '>' e
+  | e '==' e
+  | e '+' e
+  | ID
+  ;

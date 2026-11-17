@@ -1,0 +1,25 @@
+digraph LALR {
+  rankdir=LR;
+  node [shape=box, fontname="monospace", fontsize=10];
+  0 [label="I0\lstmt' -> . stmt , $\lstmt -> . 'if' ID 'then' stmt , $\lstmt -> . 'if' ID 'then' stmt 'else' stmt , $\lstmt -> . ID , $\l"];
+  1 [label="I1\lstmt -> 'if' . ID 'then' stmt , $/'else'\lstmt -> 'if' . ID 'then' stmt 'else' stmt , $/'else'\l"];
+  2 [label="I2\lstmt -> ID . , $/'else'\l"];
+  3 [label="I3\lstmt' -> stmt . , $\l"];
+  4 [label="I4\lstmt -> 'if' ID . 'then' stmt , $/'else'\lstmt -> 'if' ID . 'then' stmt 'else' stmt , $/'else'\l"];
+  5 [label="I5\lstmt -> 'if' ID 'then' . stmt , $/'else'\lstmt -> 'if' ID 'then' . stmt 'else' stmt , $/'else'\lstmt -> . 'if' ID 'then' stmt , $/'else'\lstmt -> . 'if' ID 'then' stmt 'else' stmt , $/'else'\lstmt -> . ID , $/'else'\l"];
+  6 [label="I6\lstmt -> 'if' ID 'then' stmt . , $/'else'\lstmt -> 'if' ID 'then' stmt . 'else' stmt , $/'else'\l", color=red, penwidth=2];
+  7 [label="I7\lstmt -> 'if' ID 'then' stmt 'else' . stmt , $/'else'\lstmt -> . 'if' ID 'then' stmt , $/'else'\lstmt -> . 'if' ID 'then' stmt 'else' stmt , $/'else'\lstmt -> . ID , $/'else'\l"];
+  8 [label="I8\lstmt -> 'if' ID 'then' stmt 'else' stmt . , $/'else'\l"];
+  0 -> 1 [label="'if'"];
+  0 -> 2 [label="ID"];
+  0 -> 3 [label="stmt"];
+  1 -> 4 [label="ID"];
+  4 -> 5 [label="'then'"];
+  5 -> 1 [label="'if'"];
+  5 -> 2 [label="ID"];
+  5 -> 6 [label="stmt"];
+  6 -> 7 [label="'else'"];
+  7 -> 1 [label="'if'"];
+  7 -> 2 [label="ID"];
+  7 -> 8 [label="stmt"];
+}

@@ -1,0 +1,9 @@
+{
+  "name": "LALRGen",
+  "version": 1.0,
+  "tags": ["lexer", "parser", "lalr"],
+  "stable": true,
+  "parent": null,
+  "escapes": "quote \" slash \/ tab \t unicode é",
+  "nested": {"empty_obj": {}, "empty_arr": [], "numbers": [0, -1, 2.5e10, 3E-2]}
+}

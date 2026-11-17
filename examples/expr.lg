@@ -1,0 +1,16 @@
+# expr.lg: the classic dragon-book expression grammar (unambiguous, SLR).
+# Precedence is encoded in the grammar's structure: '*' binds tighter than '+'.
+%token id /[a-zA-Z_][a-zA-Z0-9_]*/
+%skip     /[ \t\r\n]+/
+
+%%
+
+E : E '+' T
+  | T
+  ;
+T : T '*' F
+  | F
+  ;
+F : '(' E ')'
+  | id
+  ;
